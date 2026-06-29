@@ -30,24 +30,32 @@ class Candidate:
         return self.w_um / self.pitch_um
 
 
+def format_size_token(value: float) -> str:
+    text = f"{value:.4f}".rstrip("0").rstrip(".")
+    return text.replace(".", "p").replace("-", "m")
+
+
+def candidate_name(n_turns: float, r0_um: float, w_um: float, s_um: float) -> str:
+    return (
+        f"LQ_N{format_size_token(n_turns)}"
+        f"_R{format_size_token(r0_um)}"
+        f"_W{format_size_token(w_um)}"
+        f"_S{format_size_token(s_um)}"
+    )
+
+
 DEFAULT_V1_CANDIDATES = [
-    Candidate(f"lqv1_n25_a{i}", r0, 2.5, 12, w, s)
-    for i, (r0, w, s) in enumerate(
-        [(r0, w, s) for r0 in (48, 56, 64, 72) for w, s in ((9.6, 12.0), (10.4, 14.0))],
-        start=1,
-    )
+    Candidate(candidate_name(2.5, r0, w, s), r0, 2.5, 12, w, s)
+    for r0 in (48, 56, 64, 72)
+    for w, s in ((9.6, 12.0), (10.4, 14.0))
 ] + [
-    Candidate(f"lqv1_n35_a{i}", r0, 3.5, 12, w, s)
-    for i, (r0, w, s) in enumerate(
-        [(r0, w, s) for r0 in (56, 64, 72, 80) for w, s in ((10.4, 14.0), (10.4, 15.0))],
-        start=1,
-    )
+    Candidate(candidate_name(3.5, r0, w, s), r0, 3.5, 12, w, s)
+    for r0 in (56, 64, 72, 80)
+    for w, s in ((10.4, 14.0), (10.4, 15.0))
 ] + [
-    Candidate(f"lqv1_n45_a{i}", r0, 4.5, 12, w, s)
-    for i, (r0, w, s) in enumerate(
-        [(r0, w, s) for r0 in (60, 68, 76, 84) for w, s in ((10.4, 15.0), (11.2, 16.0))],
-        start=1,
-    )
+    Candidate(candidate_name(4.5, r0, w, s), r0, 4.5, 12, w, s)
+    for r0 in (60, 68, 76, 84)
+    for w, s in ((10.4, 15.0), (11.2, 16.0))
 ]
 
 
@@ -91,4 +99,3 @@ def write_manifest(path: Path, rows: Iterable[dict[str, object]]) -> None:
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
-
