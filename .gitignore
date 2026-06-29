@@ -20,4 +20,6 @@ strmout.log
 data/*.csv
 data/*.json
 !data/examples/**
-
+!data/v1_dataset.csv
+!data/v1_model.json
+!data/v1_report.json
