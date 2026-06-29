@@ -30,6 +30,19 @@ Run the built-in Touchstone regression without extra test dependencies:
 python scripts/validate_examples.py
 ```
 
+## Overnight V2 Sampling
+
+The overnight workflow creates an independent ignored run directory, resumes from existing valid S2P/GDS files, and still trains from partial completed results if the time budget expires:
+
+```powershell
+python scripts/validate_examples.py
+python -m compileall -q src scripts tests
+$env:LVBOBALUN_VM_PASSWORD = "user1111"
+python scripts/run_overnight.py --root runs/overnight_v2 --hours 8 --target-count 600
+```
+
+It writes the raw overnight extraction to `data/overnight_v2_dataset.csv`, merges completed rows with v1 into `data/v2_dataset.csv`, then fits `data/v2_model.json` and `data/v2_report.json`. Rows without valid EMX L/Q are skipped during merge, so an interrupted run does not poison the v2 training set with unrun candidates.
+
 ## Target-L Best-Q Flow
 
 Use the surrogate to propose a diverse target-L candidate batch, then let EMX pick the final best-Q FDL:
@@ -53,6 +66,9 @@ By default it refuses candidates with predicted `|L-target| > 0.25 nH`; raise `-
 - `data/v1_dataset.csv`: extracted accepted/rejected sample table
 - `data/v1_model.json`: fitted surrogate model
 - `data/v1_report.json`: compact batch/model report
+- `data/v2_dataset.csv`: merged v1 + completed overnight v2 sample table
+- `data/v2_model.json`: fitted v2 surrogate model
+- `data/v2_report.json`: compact v2 batch/model report
 
 ## Git Policy
 

@@ -23,3 +23,7 @@ data/*.json
 !data/v1_dataset.csv
 !data/v1_model.json
 !data/v1_report.json
+!data/overnight_v2_dataset.csv
+!data/v2_dataset.csv
+!data/v2_model.json
+!data/v2_report.json

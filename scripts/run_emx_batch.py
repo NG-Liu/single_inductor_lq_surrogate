@@ -4,6 +4,7 @@ import csv
 import json
 import posixpath
 import sys
+import time
 from pathlib import Path
 from traceback import format_exception_only
 
@@ -36,6 +37,7 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=None, help="Optional smoke-test limit.")
     parser.add_argument("--force", action="store_true", help="Rerun candidates even if local S2P/GDS already exist.")
     parser.add_argument("--summary-out", type=Path, default=None, help="Optional JSON batch summary path.")
+    parser.add_argument("--max-runtime-seconds", type=float, default=None, help="Stop launching new candidates after this many seconds.")
     args = parser.parse_args()
 
     cfg = VmConfig()
@@ -50,8 +52,14 @@ def main() -> int:
     succeeded: list[str] = []
     skipped: list[str] = []
     failed: list[tuple[str, str]] = []
+    stopped_due_to_time_budget = False
+    started = time.time()
 
     for row in rows:
+        if args.max_runtime_seconds is not None and time.time() - started >= args.max_runtime_seconds:
+            stopped_due_to_time_budget = True
+            print(f"stop: max runtime reached after {time.time() - started:.1f}s")
+            break
         cid = row["candidate_id"]
         fdl_path = (run_root / row["fdl_path"]).resolve()
         skill_path = (run_root / row["skill_path"]).resolve()
@@ -90,9 +98,15 @@ def main() -> int:
             failed.append((cid, f"{message}; remote logs: {log_text}"))
             print(f"[{cid}] FAILED: {message}; remote logs: {log_text}", file=sys.stderr)
 
-    print(f"summary: succeeded={len(succeeded)} skipped={len(skipped)} failed={len(failed)}")
+    elapsed_seconds = time.time() - started
+    print(
+        f"summary: succeeded={len(succeeded)} skipped={len(skipped)} failed={len(failed)} "
+        f"stopped_due_to_time_budget={int(stopped_due_to_time_budget)}"
+    )
     summary = {
         "manifest": str(args.manifest),
+        "elapsed_seconds": elapsed_seconds,
+        "stopped_due_to_time_budget": stopped_due_to_time_budget,
         "succeeded": succeeded,
         "skipped": skipped,
         "failed": [{"candidate_id": cid, "reason": message} for cid, message in failed],
