@@ -43,6 +43,21 @@ python scripts/run_overnight.py --root runs/overnight_v2 --hours 8 --target-coun
 
 It writes the raw overnight extraction to `data/overnight_v2_dataset.csv`, merges completed rows with v1 into `data/v2_dataset.csv`, then fits `data/v2_model.json` and `data/v2_report.json`. Rows without valid EMX L/Q are skipped during merge, so an interrupted run does not poison the v2 training set with unrun candidates.
 
+## Shunt-Grounded Library
+
+Use this as a separate context library for filter shunt inductors. It reuses series-library geometries, but adds a local wide ground landing at the P2 end. The EMX port is still `Pdiff=P1:P2`, so the extracted impedance is signal-to-local-ground for the shunt branch.
+
+```powershell
+python scripts/generate_shunt_candidates.py --source runs/overnight_v2/manifest.csv --out-root runs/shunt_v1 --limit 200
+$env:LVBOBALUN_VM_PASSWORD = "user1111"
+python scripts/run_emx_batch.py --manifest runs/shunt_v1/manifest.csv
+python scripts/extract_dataset.py --root runs/shunt_v1 --out data/shunt_v1_dataset.csv
+python scripts/fit_model.py --dataset data/shunt_v1_dataset.csv --model-out data/shunt_v1_model.json
+python scripts/make_report.py --dataset data/shunt_v1_dataset.csv --model data/shunt_v1_model.json --out data/shunt_v1_report.json --batch-summary runs/shunt_v1/emx_batch_summary.json
+```
+
+Keep `series_float` and `shunt_grounded` datasets separate. A geometry with the best floating two-terminal Q is not automatically the best grounded shunt branch after terminal landing and return parasitics are included.
+
 ## Target-L Best-Q Flow
 
 Use the surrogate to propose a diverse target-L candidate batch, then let EMX pick the final best-Q FDL:
@@ -69,6 +84,7 @@ By default it refuses candidates with predicted `|L-target| > 0.25 nH`; raise `-
 - `data/v2_dataset.csv`: merged v1 + completed overnight v2 sample table
 - `data/v2_model.json`: fitted v2 surrogate model
 - `data/v2_report.json`: compact v2 batch/model report
+- `data/shunt_v1_dataset.csv`: separate signal-to-local-ground shunt sample table
 
 ## Git Policy
 

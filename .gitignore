@@ -27,3 +27,6 @@ data/*.json
 !data/v2_dataset.csv
 !data/v2_model.json
 !data/v2_report.json
+!data/shunt_v1_dataset.csv
+!data/shunt_v1_model.json
+!data/shunt_v1_report.json
