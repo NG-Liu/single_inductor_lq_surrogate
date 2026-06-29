@@ -1,0 +1,16 @@
+! Touchstone simulation data from EMX version 6.0
+! Mon Jun 29 19:06:13 2026
+! EMX was run as:
+! emx
+! /home/IC/EDA/emx_runs/inductor_validation_12gon/inductor_validation_12gon.gds
+! inductor_validation_12gon
+! /home/IC/EDA/INTEGRAND60/virtuoso_ui/emxinterface/processes/fdl_stack.proc
+! --3d=m4,m5 --via-sidewalls=v4 --via-inductance=v4 --sweep 3e9 4.5e9
+! --sweep-stepsize=5e8 --format=touchstone --s-impedance=50
+! --s-file=inductor_validation_12gon.s2p --internal=P1,m5,8 --internal=P2,m5,8
+! -p Pdiff=P1:P2 --include-command-line
+# Hz S RI R 50
+3.000000e+09 2.895014e-01 9.279702e-01
+3.500000e+09 4.289127e-01 8.767072e-01
+4.000000e+09 5.381000e-01 8.181712e-01
+4.500000e+09 6.238701e-01 7.583157e-01

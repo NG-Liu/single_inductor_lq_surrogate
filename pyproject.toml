@@ -1,0 +1,15 @@
+[project]
+name = "single-inductor-lq-surrogate"
+version = "0.1.0"
+description = "Single inductor L/Q surrogate workflow for FDL, Cadence/GDS, EMX, and model fitting."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "shapely",
+  "paramiko",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
