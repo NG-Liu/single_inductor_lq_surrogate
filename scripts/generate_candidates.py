@@ -15,7 +15,7 @@ def main() -> int:
     import argparse
 
     parser = argparse.ArgumentParser(description="Generate v1 single-inductor FDL candidates.")
-    parser.add_argument("--config", type=Path, default=ROOT / "configs" / "v1_24_samples.yaml", help="Reserved config path; v1 uses the checked-in default grid.")
+    parser.add_argument("--config", type=Path, default=ROOT / "configs" / "v1_42_samples.yaml", help="Reserved config path; v1 uses the checked-in default grid.")
     parser.add_argument("--out-root", type=Path, default=ROOT / "runs" / "v1")
     args = parser.parse_args()
 
@@ -64,4 +64,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

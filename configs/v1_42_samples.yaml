@@ -1,0 +1,47 @@
+# v1 extended grid: original 24 samples plus 18 supplement samples.
+# The generator currently uses the checked-in Python default candidate list;
+# this YAML is the human-readable record for that list.
+sample_freqs_ghz: [3.0, 3.5, 4.0, 4.5]
+main_freq_ghz: 3.75
+accepted_l_range_nh: [1.0, 6.0]
+sides: 12
+left_bridge_um: 180.0
+right_bridge_um: 180.0
+label_source: EMX
+candidates:
+  n2p5:
+    n_turns: 2.5
+    r0_um: [48, 56, 64, 72]
+    ws_pairs_um: [[9.6, 12.0], [10.4, 14.0]]
+  n3p5_original:
+    n_turns: 3.5
+    r0_um: [56, 64, 72, 80]
+    ws_pairs_um: [[10.4, 14.0], [10.4, 15.0]]
+  n4p5_original:
+    n_turns: 4.5
+    r0_um: [60, 68, 76, 84]
+    ws_pairs_um: [[10.4, 15.0], [11.2, 16.0]]
+  n3p5_supplement:
+    n_turns: 3.5
+    points_um:
+      - [36, 10.4, 14.0]
+      - [36, 10.4, 15.0]
+      - [40, 10.4, 14.0]
+      - [40, 10.4, 15.0]
+      - [44, 10.4, 14.0]
+      - [44, 10.4, 15.0]
+      - [48, 11.2, 16.0]
+      - [52, 11.2, 16.0]
+      - [56, 11.2, 16.0]
+  n4p5_supplement:
+    n_turns: 4.5
+    points_um:
+      - [40, 11.2, 16.0]
+      - [44, 10.4, 15.0]
+      - [44, 11.2, 16.0]
+      - [48, 10.4, 14.0]
+      - [48, 10.4, 15.0]
+      - [48, 11.2, 16.0]
+      - [52, 10.4, 14.0]
+      - [52, 10.4, 15.0]
+      - [52, 11.2, 16.0]
