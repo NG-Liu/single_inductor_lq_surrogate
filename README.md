@@ -30,6 +30,20 @@ Run the built-in Touchstone regression without extra test dependencies:
 python scripts/validate_examples.py
 ```
 
+## Target-L Best-Q Flow
+
+Use the surrogate to propose a diverse target-L candidate batch, then let EMX pick the final best-Q FDL:
+
+```powershell
+python scripts/propose_target_l.py --target-L 3.6 --tol 0.05 --top 20
+$env:LVBOBALUN_VM_PASSWORD = "user1111"
+python scripts/run_emx_batch.py --manifest runs/target_L3p6/manifest.csv
+python scripts/select_best.py --root runs/target_L3p6 --target-L 3.6 --tol 0.05
+```
+
+The proposal step searches only within accepted v1 data bands by default. It uses the selected L surrogate for L matching and the linear Q model for Q ranking because the current validation set gives lower Q error for the linear model.
+By default it refuses candidates with predicted `|L-target| > 0.25 nH`; raise `--max-error` or `--tol` if a target needs a broader exploratory batch.
+
 ## Outputs
 
 - `runs/v1/fdl/*.py`: generated UltraEM-compatible FDL files
