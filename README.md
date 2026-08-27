@@ -14,7 +14,7 @@ The main target is `L@3.75GHz` and `Q@3.75GHz`. These are computed by linearly i
 
 ```powershell
 python scripts/generate_candidates.py --config configs/v1_42_samples.yaml
-$env:LVBOBALUN_VM_PASSWORD = "user1111"
+$env:LVBOBALUN_VM_PASSWORD = "<VM password>"
 python scripts/run_emx_batch.py --manifest runs/v1/manifest.csv
 python scripts/extract_dataset.py --root runs/v1
 python scripts/fit_model.py --dataset data/v1_dataset.csv
@@ -37,7 +37,7 @@ The overnight workflow creates an independent ignored run directory, resumes fro
 ```powershell
 python scripts/validate_examples.py
 python -m compileall -q src scripts tests
-$env:LVBOBALUN_VM_PASSWORD = "user1111"
+$env:LVBOBALUN_VM_PASSWORD = "<VM password>"
 python scripts/run_overnight.py --root runs/overnight_v2 --hours 8 --target-count 600
 ```
 
@@ -49,7 +49,7 @@ Use this as a separate context library for filter shunt inductors. It reuses ser
 
 ```powershell
 python scripts/generate_shunt_candidates.py --source runs/overnight_v2/manifest.csv --out-root runs/shunt_v1 --limit 200
-$env:LVBOBALUN_VM_PASSWORD = "user1111"
+$env:LVBOBALUN_VM_PASSWORD = "<VM password>"
 python scripts/run_emx_batch.py --manifest runs/shunt_v1/manifest.csv
 python scripts/extract_dataset.py --root runs/shunt_v1 --out data/shunt_v1_dataset.csv
 python scripts/fit_model.py --dataset data/shunt_v1_dataset.csv --model-out data/shunt_v1_model.json
@@ -85,6 +85,20 @@ By default it refuses candidates with predicted `|L-target| > 0.25 nH`; raise `-
 - `data/v2_model.json`: fitted v2 surrogate model
 - `data/v2_report.json`: compact v2 batch/model report
 - `data/shunt_v1_dataset.csv`: separate signal-to-local-ground shunt sample table
+
+## One-Command Target-L Flow
+
+Use the core wrapper when you want a proposal, resilient EMX batch, and
+best-Q selection recorded in one run directory:
+
+```powershell
+python scripts/optimize_target_l_emx.py --target-L 5.367 --tol 0.02 --top 12 --out-root runs/target_L5p367_new
+```
+
+Add `--skip-emx` to generate only FDL, manifest, and proposal files. See
+`docs/TARGET_L_WORKFLOW.md` for the runner behavior and
+`docs/PROJECT_LINEAGE.md` for the relationship to the release and integration
+workspace.
 
 ## Git Policy
 
